@@ -1,1 +1,138 @@
+from abc import ABCMeta, abstractmethod
 
+class Kegiatan(metaclass= ABCMeta):
+	@abstractmethod
+	def namaKegiatan(self):
+		pass
+		
+class Pendaftaran(Kegiatan):
+	
+	def namaKegiatan(self):
+		print('Uang Pendaftaran')
+		
+class KuliahPertama(Kegiatan):
+	
+	def namaKegiatan(self):
+		print('Uang Kuliah Pertama')
+		
+class MPT(Kegiatan):
+	
+	def namaKegiatan(self):
+		print('Uang MPT\t:\n-\tUang Training\n-\tUang Penginapan\n-\tUang Konsumsi')
+	
+class Biaya(metaclass= ABCMeta):
+	@abstractmethod
+	def totalBiaya(self):
+		pass
+		
+class BiayaPendaftaran(Biaya):
+	
+	def totalBiaya(self):
+		print('Rp.', 200000)
+		
+class BiayaKuliahPertama(Biaya):
+	
+	def totalBiaya(self):
+		print('Rp.', 1500000)
+		
+class BiayaMPT(Biaya):
+	
+	def totalBiaya(self):
+		print(f'Rp.{100000}\nRp.{200000}\nRp.{150000}')
+		
+class AbstractFactory(metaclass=ABCMeta):
+	@abstractmethod
+	def getKegiatan(self):
+		pass
+	
+	@abstractmethod
+	def getBiaya(self):
+		pass
+		
+class DoPendaftaran(AbstractFactory):
+	
+	def getKegiatan(self):
+		pendaftaran = Pendaftaran()
+		pendaftaran.namaKegiatan()
+		
+	def getBiaya(self):
+		biaya = BiayaPendaftaran()
+		biaya.totalBiaya()
+		
+class DoKuliahPertama(AbstractFactory):
+	
+	def getKegiatan(self):
+		kuliahPertama = KuliahPertama()
+		kuliahPertama.namaKegiatan()
+		
+	def getBiaya(self):
+		biaya = BiayaKuliahPertama()
+		biaya.totalBiaya()
+
+class DoMPT(AbstractFactory):
+	
+	def getKegiatan(self):
+		mpt = MPT()
+		mpt.namaKegiatan()
+		
+	def getBiaya(self):
+		biaya = BiayaMPT()
+		biaya.totalBiaya()
+		
+class FactoryProducer:
+	
+	def __init__(self):
+		pass
+		
+	def createObject(self):
+		DoPendaftaran().getKegiatan()
+		DoPendaftaran().getBiaya()
+		DoKuliahPertama().getKegiatan()
+		DoKuliahPertama().getBiaya()
+		DoMPT().getKegiatan()
+		DoMPT().getBiaya()
+		
+		
+if __name__ == '__main__':
+	factoryproducer = FactoryProducer()
+	factoryproducer.createObject()
+
+class CompositeElement:
+
+	def __init__(self, *args):
+		self.position = args[0]
+		self.children = []
+		
+	def add(self, child):
+		self.children.append(child)
+		
+	def remove(self, child):
+		self.children.remove(child)
+		
+	def showDetails(self):
+		print(self.position)
+		for child in self.children:
+			print('   ', end='')
+			child.showDetails()
+			
+class LeafElement:
+	
+	def __init__(self, *args):
+		self.position = args[0]
+		
+	def showDetails(self):
+		print(self.position)
+		
+if __name__ == '__main__':
+	item1 = CompositeElement(f'Uang Pendaftaran\t: Rp.{200000}')
+	item2 = CompositeElement(f'Uang Kuliah Pertama\t: Rp.{1500000}')
+	item3 = CompositeElement('Uang MPT :')
+	subitem3_1 = LeafElement(f'- Uang Training\t: Rp.{100000}')
+	item3.add(subitem3_1)
+	subitem3_2 = LeafElement(f'- Uang Penginapan\t: Rp.{200000}')
+	item3.add(subitem3_2)
+	subitem3_2 = LeafElement(f'- Uang Konsunsi\t: Rp.{150000}')
+	item3.add(subitem3_2)
+	item1.showDetails()
+	item2.showDetails()
+	item3.showDetails()
